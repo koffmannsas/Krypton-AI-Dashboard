@@ -1,0 +1,30 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper to check if user belongs to the company
+    function isCompanyMember(companyId) {
+      return companyId == 'default-company' || (
+        request.auth != null && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.companyId == companyId
+      );
+    }
+
+    match /companies/{companyId}/{document=**} {
+      allow read, write: if isCompanyMember(companyId);
+    }
+    
+    // Explicit keywords validation
+    match /companies/{companyId}/keywords/{keywordId} {
+      allow create: if isCompanyMember(companyId) && 
+        request.resource.data.term is string &&
+        request.resource.data.term.size() < 200;
+      allow update: if isCompanyMember(companyId) &&
+        (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'articleId', 'processedAt']) || isAdmin());
+    }
+    
+    // Allow users to read/write their own profile
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}

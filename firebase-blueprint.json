@@ -1,0 +1,156 @@
+{
+  "entities": {
+    "Transaction": {
+      "title": "Transaction",
+      "description": "A financial transaction for a company.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "amount": { "type": "number" },
+        "status": { "type": "string", "enum": ["paid", "pending", "failed"] },
+        "date": { "type": "string", "format": "date" }
+      },
+      "required": ["amount", "status", "date"]
+    },
+    "Customer": {
+      "title": "Customer",
+      "description": "A customer of the company.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "totalSpent": { "type": "number" }
+      },
+      "required": ["name", "email"]
+    },
+    "Campaign": {
+      "title": "Campaign",
+      "description": "A marketing campaign.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "channel": { "type": "string", "enum": ["WhatsApp", "Email"] },
+        "status": { "type": "string" },
+        "sent": { "type": "number" },
+        "clicks": { "type": "number" },
+        "conversions": { "type": "number" }
+      },
+      "required": ["name", "channel"]
+    },
+    "Article": {
+      "title": "Article",
+      "description": "A blog article for SEO purposes.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "content": { "type": "string" },
+        "slug": { "type": "string" },
+        "category": { "type": "string" },
+        "status": { "type": "string", "enum": ["draft", "scheduled", "published"] },
+        "scheduledDate": { "type": "string", "format": "date-time" },
+        "seoScore": { "type": "number" },
+        "mainKeyword": { "type": "string" },
+        "metaDescription": { "type": "string" },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "internalLinks": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["title", "slug", "content", "status"]
+    },
+    "Category": {
+      "title": "Category",
+      "description": "Blog category for semantic cocooning.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "slug": { "type": "string" },
+        "description": { "type": "string" }
+      },
+      "required": ["name", "slug"]
+    },
+    "Keyword": {
+      "title": "Keyword",
+      "description": "Target keyword for the AI Agent engine.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "term": { "type": "string" },
+        "cluster": { "type": "string" },
+        "intent": { "type": "string", "enum": ["traffic", "conversion"] },
+        "status": { "type": "string", "enum": ["pending", "processing", "completed"] },
+        "priority": { "type": "number" },
+        "secondaryKeywords": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["term", "cluster", "intent", "status"]
+    },
+    "BacklinkTarget": {
+      "title": "BacklinkTarget",
+      "description": "A potential website for netlinking outreach.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "domain": { "type": "string" },
+        "da": { "type": "number" },
+        "type": { "type": "string", "enum": ["blog", "media", "directory", "forum"] },
+        "tier": { "type": "string", "enum": ["tier1", "tier2", "tier3"] },
+        "contactEmail": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "contacted", "negotiating", "signed", "rejected"] }
+      },
+      "required": ["domain", "da", "type", "tier", "status"]
+    },
+    "Backlink": {
+      "title": "Backlink",
+      "description": "An established backlink pointing to Krypton AI.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "url": { "type": "string" },
+        "targetDomain": { "type": "string" },
+        "anchorText": { "type": "string" },
+        "anchorType": { "type": "string", "enum": ["brand", "keyword", "generic", "url"] },
+        "status": { "type": "string", "enum": ["active", "lost", "pending"] },
+        "tier": { "type": "string", "enum": ["tier1", "tier2", "tier3"] },
+        "placedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["url", "targetDomain", "anchorText", "anchorType", "status"]
+    }
+  },
+  "firestore": {
+    "/companies/{companyId}/transactions/{transactionId}": {
+      "schema": { "$ref": "Transaction" },
+      "description": "Transactions collection scoped by companyId."
+    },
+    "/companies/{companyId}/customers/{customerId}": {
+      "schema": { "$ref": "Customer" },
+      "description": "Customers collection scoped by companyId."
+    },
+    "/companies/{companyId}/campaigns/{campaignId}": {
+      "schema": { "$ref": "Campaign" },
+      "description": "Campaigns collection scoped by companyId."
+    },
+    "/companies/{companyId}/articles/{articleId}": {
+      "schema": { "$ref": "Article" },
+      "description": "Blog articles for the SEO system."
+    },
+    "/companies/{companyId}/categories/{categoryId}": {
+      "schema": { "$ref": "Category" },
+      "description": "Blog categories for the SEO system."
+    },
+    "/companies/{companyId}/keywords/{keywordId}": {
+      "schema": { "$ref": "Keyword" },
+      "description": "Target keywords for the autonomous agent."
+    },
+    "/companies/{companyId}/backlink_targets/{targetId}": {
+      "schema": { "$ref": "BacklinkTarget" },
+      "description": "Potential backlink locations."
+    },
+    "/companies/{companyId}/backlinks/{backlinkId}": {
+      "schema": { "$ref": "Backlink" },
+      "description": "Established backlinks records."
+    }
+  }
+}
