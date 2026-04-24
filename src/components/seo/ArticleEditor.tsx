@@ -142,7 +142,29 @@ export default function ArticleEditor({ article, onSave, onClose }: ArticleEdito
                        </ul>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-3">
+                      {/* Internal Linking Engine */}
+                      <div className="space-y-4 pt-6 mt-6 border-t border-border">
+                        <div className="flex items-center justify-between">
+                          <p className="text-[10px] font-bold uppercase tracking-widest text-primary">Linking Strategy</p>
+                          <span className="text-[9px] bg-primary/10 text-primary px-1.5 py-0.5 rounded font-black">AI Suggest</span>
+                        </div>
+                        <div className="space-y-2">
+                           {[
+                             { term: "automatisation", target: "/admin/ai-center", anchor: "systèmes d'automatisation" },
+                             { term: "SEO", target: "/admin/seo", anchor: "stratégies SEO" },
+                           ].map((link, j) => (
+                             <div key={j} className="p-3 bg-primary/5 rounded-xl border border-primary/10 flex flex-col gap-1.5 group cursor-pointer hover:bg-primary/10 transition-all">
+                               <div className="flex justify-between items-center">
+                                 <span className="text-[10px] font-black text-primary">INTERNE</span>
+                                 <span className="text-[9px] text-muted opacity-60">{link.target}</span>
+                               </div>
+                               <p className="text-xs font-medium">Link <span className="font-bold">"{link.anchor}"</span> to category.</p>
+                             </div>
+                           ))}
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-3">
                       {[
                         { label: 'Length', ok: score.details.length },
                         { label: 'Density', ok: score.details.density },

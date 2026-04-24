@@ -3,13 +3,12 @@ import { initializeFirestore, setLogLevel } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyD9zX9MCzN9Tdmky45wgQN1yiutzgVnkLg",
-  authDomain: "krypton-ai-core.firebaseapp.com",
-  projectId: "krypton-ai-core",
-  storageBucket: "krypton-ai-core.firebasestorage.app",
-  messagingSenderId: "764187835435",
-  appId: "1:764187835435:web:dea45e114e6a94387dfe6e",
-  measurementId: "G-8X5B5KYBEM"
+  apiKey: "AIzaSyCVM_0lHTDJuJt-snYxWeE-_csykE4-cwM",
+  authDomain: "krypton-ai-490214.firebaseapp.com",
+  projectId: "krypton-ai-490214",
+  storageBucket: "krypton-ai-490214.firebasestorage.app",
+  messagingSenderId: "1042528571231",
+  appId: "1:1042528571231:web:2e173c75677a18868670ea"
 };
 
 const app = initializeApp(firebaseConfig);

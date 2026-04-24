@@ -13,6 +13,11 @@ service cloud.firestore {
       allow read, write: if isCompanyMember(companyId);
     }
     
+    // Allow public read for landing page settings
+    match /companies/{companyId}/settings/public_website {
+      allow read: if true;
+    }
+    
     // Explicit keywords validation
     match /companies/{companyId}/keywords/{keywordId} {
       allow create: if isCompanyMember(companyId) && 

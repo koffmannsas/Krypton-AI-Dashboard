@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useStore } from "../context/useStore";
+import { cn } from "../lib/utils";
 import { generateInsights } from "../services/ai/insights";
 import { getAIInsights } from "../services/ai/insightsEngine";
 
@@ -7,7 +8,20 @@ import StatCard from "../components/ui/StatCard";
 import RevenueChart from "../components/ui/RevenueChart";
 import Card from "../components/ui/Card";
 
-import { DollarSign, Users, ShoppingCart, Activity, Search, TrendingUp, Sparkles, Zap, MessageSquare } from "lucide-react";
+import { 
+  DollarSign, 
+  Users, 
+  ShoppingCart, 
+  Activity, 
+  Search, 
+  TrendingUp, 
+  Sparkles, 
+  Zap, 
+  MessageSquare,
+  AlertTriangle,
+  Network,
+  Target as TargetIcon
+} from "lucide-react";
 
 import { subscribeStats } from "../services/api/stats";
 import { subscribeCustomersCount } from "../services/api/customers";
@@ -31,6 +45,14 @@ export default function Home() {
   const [aiInsight, setAiInsight] = useState("");
   const [insights, setInsights] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Simulation engine statuses
+  const engines = [
+    { name: 'SEO Engine', status: 'Online', power: 85, color: 'text-primary' },
+    { name: 'Programmatic', status: 'Active', power: 40, color: 'text-accent' },
+    { name: 'Content Gen', status: 'Standby', power: 0, color: 'text-muted' },
+    { name: 'Discover', status: 'Monitoring', power: 65, color: 'text-green-500' },
+  ];
 
   // 🔥 PAYMENT
   const handleCreatePayment = async () => {
@@ -188,6 +210,22 @@ export default function Home() {
         <div className="lg:col-span-2 space-y-8">
            <RevenueChart data={stats.chartData} />
            
+           {/* 🔥 ENGINE OVERVIEW */}
+           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+             {engines.map(engine => (
+               <Card key={engine.name} className="p-4 border-border/50">
+                 <p className="text-[9px] uppercase font-bold text-muted mb-1">{engine.name}</p>
+                 <div className="flex items-center justify-between">
+                    <span className={cn("text-xs font-black", engine.color)}>{engine.status}</span>
+                    <span className="text-[10px] text-muted">{engine.power}%</span>
+                 </div>
+                 <div className="w-full h-1 bg-border rounded-full mt-2 overflow-hidden">
+                    <div className={cn("h-full", engine.status === 'Online' ? 'bg-primary' : engine.status === 'Active' ? 'bg-accent' : 'bg-muted')} style={{ width: `${engine.power}%` }} />
+                 </div>
+               </Card>
+             ))}
+           </div>
+
            {/* 🔥 AI INSIGHTS */}
            <Card className="relative overflow-hidden border-primary/20 bg-primary/5">
              <div className="flex items-center gap-2 mb-4 text-primary font-bold uppercase tracking-widest text-[10px]">
@@ -203,6 +241,26 @@ export default function Home() {
         </div>
 
         <div className="space-y-6">
+          <Card className="p-5 space-y-4">
+             <div className="flex items-center justify-between mb-2">
+                <h3 className="text-sm font-bold flex items-center gap-2">
+                   <AlertTriangle size={16} className="text-accent" />
+                   System Alerts
+                </h3>
+             </div>
+             <div className="space-y-3">
+                {[
+                  { title: "Niche Opportunité", desc: "IA Immo (+350% interest)", color: "text-accent", bg: "bg-accent/10" },
+                  { title: "SEO Gap", desc: "Cluster 'Cybersecurity' vide", color: "text-red-500", bg: "bg-red-500/10" },
+                ].map(alert => (
+                  <div key={alert.title} className={cn("p-3 rounded-xl border border-transparent hover:border-border transition-colors cursor-pointer", alert.bg)}>
+                    <p className={cn("text-[10px] font-black uppercase", alert.color)}>{alert.title}</p>
+                    <p className="text-xs font-medium mt-0.5">{alert.desc}</p>
+                  </div>
+                ))}
+             </div>
+          </Card>
+
           <Card className="flex flex-col gap-4">
             <NeuralFeed />
           </Card>

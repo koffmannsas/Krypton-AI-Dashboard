@@ -15,7 +15,11 @@ export default function LandingPage() {
     return () => unsub();
   }, []);
 
-  if (!settings) return null;
+  if (!settings) return (
+    <div className="min-h-screen flex items-center justify-center bg-bg text-ink">
+      <div className="text-xl font-display font-medium">Chargement de Krypton AI...</div>
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-bg text-ink font-sans selection:bg-primary/20">

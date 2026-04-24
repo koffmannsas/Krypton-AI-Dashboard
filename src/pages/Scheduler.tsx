@@ -11,12 +11,23 @@ export default function Scheduler() {
     <div className="space-y-8 max-w-7xl mx-auto">
       <div className="flex justify-between items-end">
         <div>
-          <h1 className="text-3xl font-display font-bold tracking-tight">Editorial Calendar</h1>
+          <h1 className="text-3xl font-display font-bold tracking-tight">Krypton Scheduler</h1>
           <p className="text-muted text-sm">Orchestrate your content pipeline with precision.</p>
         </div>
-        <Button className="flex items-center gap-2">
-           <Plus size={16} /> Schedule Article
-        </Button>
+        <div className="flex gap-4 items-center">
+          <div className="flex bg-surface border border-border p-3 rounded-2xl items-center gap-4 shadow-sm">
+             <div className="flex flex-col">
+               <span className="text-[10px] font-black uppercase text-primary">Autopilot Forge</span>
+               <span className="text-[9px] text-muted">2 Articles / Day</span>
+             </div>
+             <div className="relative w-10 h-5 bg-primary/20 rounded-full cursor-pointer overflow-hidden p-0.5 border border-primary/30">
+               <div className="absolute right-0.5 w-4 h-4 bg-primary rounded-full shadow-lg" />
+             </div>
+          </div>
+          <Button className="flex items-center gap-2">
+             <Plus size={16} /> Schedule Article
+          </Button>
+        </div>
       </div>
 
       <Card className="p-0 overflow-hidden">

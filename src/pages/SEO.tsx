@@ -13,11 +13,13 @@ import { updateArticle } from '../services/api/articles';
 import Card from '../components/ui/Card';
 import StatCard from '../components/ui/StatCard';
 
+import TopicClusters from '../components/seo/TopicClusters';
+
 export default function SEO() {
   const { companyId } = useStore();
   const [articles, setArticles] = useState<Article[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [activeTab, setActiveTab] = useState<'articles' | 'generator' | 'sitemap' | 'agent'>('articles');
+  const [activeTab, setActiveTab] = useState<'articles' | 'generator' | 'sitemap' | 'agent' | 'clusters'>('articles');
   const [editingArticle, setEditingArticle] = useState<Article | null>(null);
 
   useEffect(() => {
@@ -48,12 +50,13 @@ export default function SEO() {
       {/* Header */}
       <div className="flex justify-between items-end pb-2">
         <div>
-          <h1 className="text-3xl font-display font-bold tracking-tight">AI Content Forge</h1>
-          <p className="text-muted text-sm">Automated Semantic Cocooning & Optimization Agent.</p>
+          <h1 className="text-3xl font-display font-bold tracking-tight">Krypton SEO Engine</h1>
+          <p className="text-muted text-sm">Semantic Cocooning, Topic Clusters & Authority Engine.</p>
         </div>
         <div className="flex bg-surface border border-border p-1 rounded-xl">
           {[
             { id: 'articles', label: 'Dashboard', icon: <LayoutDashboard size={14} /> },
+            { id: 'clusters', label: 'Topic Clusters', icon: <Target size={14} /> },
             { id: 'agent', label: 'Agent Engine', icon: <Target size={14} /> },
             { id: 'generator', label: 'Forge Manual', icon: <Zap size={14} /> },
             { id: 'sitemap', label: 'Sitemap', icon: <Map size={14} /> }
@@ -94,6 +97,9 @@ export default function SEO() {
             articles={articles} 
             onEdit={(art) => setEditingArticle(art)}
           />
+        )}
+        {activeTab === 'clusters' && (
+          <TopicClusters />
         )}
         {activeTab === 'generator' && (
           <KeywordGenerator categories={categories} />

@@ -9,23 +9,25 @@ import {
   Map, 
   Settings,
   Zap,
-  Link as LinkIcon
+  Link as LinkIcon,
+  Sparkles
 } from 'lucide-react';
+
 import { NavLink } from 'react-router-dom';
 import { useStore } from '../../context/useStore';
 import { cn } from '../../lib/utils';
 
 const navItems = [
-  { name: 'Dashboard', path: '/admin', icon: LayoutDashboard },
-  { name: 'Blog Manager', path: '/admin/blog', icon: Search },
-  { name: 'SEO Forge', path: '/admin/seo', icon: Zap },
-  { name: 'Netlinking', path: '/admin/netlinking', icon: LinkIcon },
-  { name: 'Analytics', path: '/admin/finance', icon: CreditCard },
+  { name: 'Control Tower', path: '/admin', icon: LayoutDashboard },
+  { name: 'SEO Engine', path: '/admin/seo', icon: Zap },
+  { name: 'Programmatic Engine', path: '/admin/programmatic', icon: Map },
+  { name: 'Content Engine', path: '/admin/blog', icon: Search },
+  { name: 'Discover Engine', path: '/admin/discover', icon: Sparkles },
+  { name: 'Backlink Engine', path: '/admin/backlinks', icon: LinkIcon },
   { name: 'CRM & Leads', path: '/admin/customers', icon: Users },
-  { name: 'Marketing', path: '/admin/marketing', icon: Megaphone },
   { name: 'Scheduler', path: '/admin/scheduler', icon: Calendar },
-  { name: 'Sitemap', path: '/admin/sitemap', icon: Map },
-  { name: 'AI Center', path: '/admin/ai-center', icon: BrainCircuit },
+  { name: 'Analytics Center', path: '/admin/finance', icon: CreditCard },
+  { name: 'AI Lab', path: '/admin/ai-center', icon: BrainCircuit },
   { name: 'Settings', path: '/admin/settings', icon: Settings },
 ];
 

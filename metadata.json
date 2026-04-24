@@ -1,5 +1,6 @@
 {
-  "name": "Krypton AI Dashboard",
+  "name": "Krypton AI Admin Dashboard",
   "description": "Business growth platform for payments, CRM, marketing, and AI content generation.",
-  "requestFramePermissions": []
+  "requestFramePermissions": [],
+  "majorCapabilities": []
 }

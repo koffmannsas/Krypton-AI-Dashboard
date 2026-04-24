@@ -9,6 +9,9 @@ import Marketing from './pages/Marketing';
 import AICenter from './pages/AICenter';
 import SEO from './pages/SEO';
 import BlogManager from './pages/BlogManager';
+import ProgrammaticEngine from './pages/ProgrammaticEngine';
+import DiscoverEngine from './pages/DiscoverEngine';
+import BacklinkEngine from './pages/BacklinkEngine';
 import Scheduler from './pages/Scheduler';
 import SitemapManager from './pages/SitemapManager';
 import Settings from './pages/Settings';
@@ -30,7 +33,10 @@ export default function App() {
           <Route path="customers" element={<Customers />} />
           <Route path="marketing" element={<Marketing />} />
           <Route path="seo" element={<SEO />} />
+          <Route path="programmatic" element={<ProgrammaticEngine />} />
           <Route path="blog" element={<BlogManager />} />
+          <Route path="discover" element={<DiscoverEngine />} />
+          <Route path="backlinks" element={<BacklinkEngine />} />
           <Route path="scheduler" element={<Scheduler />} />
           <Route path="sitemap" element={<SitemapManager />} />
           <Route path="netlinking" element={<Netlinking />} />
