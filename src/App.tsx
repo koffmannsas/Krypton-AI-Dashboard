@@ -1,6 +1,9 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import DashboardLayout from './layouts/DashboardLayout';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import LandingPage from './pages/LandingPage';
+import Blog from './pages/Blog';
+import BlogPost from './pages/BlogPost';
 import Login from './pages/Login';
 import Home from './pages/Home';
 import Finance from './pages/Finance';
@@ -20,36 +23,40 @@ import SalesAgentWidget from './components/chat/SalesAgentWidget';
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* Public Fiko Landing Page */}
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<Login />} />
+    <ErrorBoundary>
+      <BrowserRouter>
+        <Routes>
+          {/* Public Fiko Landing Page */}
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
+          <Route path="/login" element={<Login />} />
+          
+          {/* Krypton Admin Dashboard */}
+          <Route path="/admin" element={<DashboardLayout />}>
+            <Route index element={<Home />} />
+            <Route path="finance" element={<Finance />} />
+            <Route path="customers" element={<Customers />} />
+            <Route path="marketing" element={<Marketing />} />
+            <Route path="seo" element={<SEO />} />
+            <Route path="programmatic" element={<ProgrammaticEngine />} />
+            <Route path="blog" element={<BlogManager />} />
+            <Route path="discover" element={<DiscoverEngine />} />
+            <Route path="backlinks" element={<BacklinkEngine />} />
+            <Route path="scheduler" element={<Scheduler />} />
+            <Route path="sitemap" element={<SitemapManager />} />
+            <Route path="netlinking" element={<Netlinking />} />
+            <Route path="settings" element={<Settings />} />
+            <Route path="ai-center" element={<AICenter />} />
+          </Route>
+          
+          {/* Fallback */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
         
-        {/* Krypton Admin Dashboard */}
-        <Route path="/admin" element={<DashboardLayout />}>
-          <Route index element={<Home />} />
-          <Route path="finance" element={<Finance />} />
-          <Route path="customers" element={<Customers />} />
-          <Route path="marketing" element={<Marketing />} />
-          <Route path="seo" element={<SEO />} />
-          <Route path="programmatic" element={<ProgrammaticEngine />} />
-          <Route path="blog" element={<BlogManager />} />
-          <Route path="discover" element={<DiscoverEngine />} />
-          <Route path="backlinks" element={<BacklinkEngine />} />
-          <Route path="scheduler" element={<Scheduler />} />
-          <Route path="sitemap" element={<SitemapManager />} />
-          <Route path="netlinking" element={<Netlinking />} />
-          <Route path="settings" element={<Settings />} />
-          <Route path="ai-center" element={<AICenter />} />
-        </Route>
-        
-        {/* Fallback */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-      
-      {/* Front-end autonomous commercial agent simulation (Fiko AI Agent on the Landing) */}
-      <SalesAgentWidget />
-    </BrowserRouter>
+        {/* Front-end autonomous commercial agent simulation (Fiko AI Agent on the Landing) */}
+        <SalesAgentWidget />
+      </BrowserRouter>
+    </ErrorBoundary>
   );
 }

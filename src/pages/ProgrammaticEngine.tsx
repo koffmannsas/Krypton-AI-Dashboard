@@ -47,7 +47,7 @@ export default function ProgrammaticEngine() {
                 <span className="text-[9px] bg-green-500/10 text-green-500 px-2 py-0.5 rounded">Active</span>
               </div>
             </div>
-            <div className="border border-border p-4 rounded-xl bg-dashed flex flex-col items-center justify-center text-muted cursor-pointer hover:border-primary transition-colors">
+            <div className="border border-border p-4 rounded-xl border-dashed bg-transparent flex flex-col items-center justify-center text-muted cursor-pointer hover:border-primary transition-colors">
               <Plus size={20} />
               <span className="text-xs mt-2">New Template</span>
             </div>

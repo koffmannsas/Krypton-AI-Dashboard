@@ -3,28 +3,47 @@ service cloud.firestore {
   match /databases/{database}/documents {
     // Helper to check if user belongs to the company
     function isCompanyMember(companyId) {
-      return companyId == 'default-company' || (
+      return companyId == 'default-company' || companyId == 'krypton-demo' || (
         request.auth != null && 
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.companyId == companyId
       );
     }
 
-    match /companies/{companyId}/{document=**} {
-      allow read, write: if isCompanyMember(companyId);
-    }
-    
-    // Allow public read for landing page settings
-    match /companies/{companyId}/settings/public_website {
+    match /articles/{articleId} {
       allow read: if true;
+      allow create: if isCompanyMember(request.resource.data.companyId);
+      allow update, delete: if isCompanyMember(resource.data.companyId);
     }
-    
-    // Explicit keywords validation
-    match /companies/{companyId}/keywords/{keywordId} {
-      allow create: if isCompanyMember(companyId) && 
-        request.resource.data.term is string &&
-        request.resource.data.term.size() < 200;
-      allow update: if isCompanyMember(companyId) &&
-        (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'articleId', 'processedAt']) || isAdmin());
+
+    match /categories/{categoryId} {
+      allow read: if true;
+      allow create: if isCompanyMember(request.resource.data.companyId);
+      allow update, delete: if isCompanyMember(resource.data.companyId);
+    }
+
+    match /companies/{companyId} {
+      // Allow public read for landing page settings explicitly
+      match /settings/public_website {
+        allow read: if true;
+        allow write: if isCompanyMember(companyId);
+      }
+      
+      // Separate exact collections to avoid the document=** catching the public_website
+      match /customers/{document=**} {
+        allow read, write: if isCompanyMember(companyId);
+      }
+      match /transactions/{document=**} {
+        allow read, write: if isCompanyMember(companyId);
+      }
+      match /keywords/{keywordId} {
+        allow create: if isCompanyMember(companyId) && 
+          request.resource.data.term is string &&
+          request.resource.data.term.size() < 200;
+        allow update: if isCompanyMember(companyId) &&
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'articleId', 'processedAt']);
+        allow read, delete: if isCompanyMember(companyId);
+      }
     }
     
     // Allow users to read/write their own profile
@@ -33,3 +52,4 @@ service cloud.firestore {
     }
   }
 }
+

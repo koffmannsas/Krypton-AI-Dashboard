@@ -1,6 +1,6 @@
 import React from 'react';
 import Card from './Card';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { cn } from '../../lib/utils';
 
 interface StatCardProps extends React.HTMLAttributes<HTMLDivElement> {

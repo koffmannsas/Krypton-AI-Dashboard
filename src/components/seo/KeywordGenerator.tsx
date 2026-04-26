@@ -18,6 +18,8 @@ export default function KeywordGenerator({ categories }: KeywordGeneratorProps) 
   const [category, setCategory] = useState('');
   const [intent, setIntent] = useState<'traffic' | 'conversion'>('traffic');
   const [type, setType] = useState<'guide' | 'comparative' | 'landing'>('guide');
+  const [articleType, setArticleType] = useState<'pillar' | 'support'>('pillar');
+  const [parentSlug, setParentSlug] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [result, setResult] = useState<any>(null);
 
@@ -25,13 +27,42 @@ export default function KeywordGenerator({ categories }: KeywordGeneratorProps) 
     if (!keyword || !category) return;
     setIsGenerating(true);
     try {
-      const articleData = await generateSEOArticle({ keyword, intent, type, category });
+      // 1. Fetch related cluster articles to inject them in the prompt for internal linking
+      const { collection, query, where, getDocs, limit } = await import('firebase/firestore');
+      const { db } = await import('../../firebase/config');
+      
+      const q = query(
+        collection(db, 'articles'),
+        where('companyId', '==', companyId),
+        where('cluster', '==', category),
+        where('status', '==', 'published'), // Link only to published ones
+        limit(5)
+      );
+      const snap = await getDocs(q);
+      const internalLinks = snap.docs.map(d => {
+        const data = d.data() as Article;
+        return { title: data.title, url: `/blog/${data.slug}`, type: data.type };
+      });
+
+      const articleData = await generateSEOArticle({ 
+        keyword, 
+        intent, 
+        type, 
+        category,
+        cluster: category,
+        articleType,
+        parentSlug,
+        internalLinks // pass links
+      });
       const seoResult = await analyzeSEO(articleData as any);
       
       const fullArticle: Partial<Article> = {
         ...articleData,
         seoScore: seoResult.score,
         category,
+        cluster: category,
+        type: articleType,
+        parentSlug,
         status: 'draft',
       };
       
@@ -72,20 +103,50 @@ export default function KeywordGenerator({ categories }: KeywordGeneratorProps) 
             <div className="grid grid-cols-2 gap-6">
               <div className="space-y-3">
                 <label className="text-[10px] font-bold uppercase tracking-widest text-muted flex items-center gap-2">
-                  <Layers size={14} /> Cluster
+                  <Layers size={14} /> Topical Cluster
                 </label>
                 <select 
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
                   className="w-full p-4 bg-surface border border-border rounded-xl focus:outline-none focus:border-primary transition-all text-sm font-medium"
                 >
-                  <option value="">Select Category</option>
+                  <option value="">Sélectionner un cluster</option>
                   {(categories.length > 0 ? categories : [{ name: 'Site Web Intelligent', slug: 'site-web' }, { name: 'CRM & Gestion', slug: 'crm' }]).map(cat => (
                     <option key={cat.id || cat.slug} value={cat.slug}>{cat.name}</option>
                   ))}
                 </select>
               </div>
 
+              <div className="space-y-3">
+                 <label className="text-[10px] font-bold uppercase tracking-widest text-muted flex items-center gap-2">
+                   <Target size={14} /> Type (Topical Authority)
+                 </label>
+                 <select 
+                    value={articleType}
+                    onChange={(e: any) => setArticleType(e.target.value)}
+                    className="w-full p-4 bg-surface border border-border rounded-xl focus:outline-none focus:border-primary transition-all text-sm font-medium"
+                 >
+                   <option value="pillar">★ Article Pilier</option>
+                   <option value="support">↳ Article Support</option>
+                 </select>
+              </div>
+            </div>
+
+            {articleType === 'support' && (
+              <div className="space-y-3">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-muted flex items-center gap-2">
+                  <BookOpen size={14} /> Slug de la page pilier parente
+                </label>
+                <input 
+                  value={parentSlug}
+                  onChange={(e) => setParentSlug(e.target.value.toLowerCase().replace(/\s+/g, '-'))}
+                  placeholder="ex: crm-intelligent-afrique" 
+                  className="w-full p-4 bg-surface border border-border rounded-xl focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all font-medium font-mono text-sm"
+                />
+              </div>
+            )}
+
+            <div className="grid grid-cols-2 gap-6">
               <div className="space-y-3">
                  <label className="text-[10px] font-bold uppercase tracking-widest text-muted flex items-center gap-2">
                    <BookOpen size={14} /> Format
@@ -100,9 +161,8 @@ export default function KeywordGenerator({ categories }: KeywordGeneratorProps) 
                    <option value="landing">SEO Landing</option>
                  </select>
               </div>
-            </div>
 
-            <div className="space-y-3">
+              <div className="space-y-3">
                 <label className="text-[10px] font-bold uppercase tracking-widest text-muted">Strategic Intent</label>
                 <div className="flex bg-surface border border-border rounded-xl p-1 gap-1">
                   <button 
@@ -118,6 +178,7 @@ export default function KeywordGenerator({ categories }: KeywordGeneratorProps) 
                     <Target size={14} /> Conversion
                   </button>
                 </div>
+              </div>
             </div>
 
             <Button 

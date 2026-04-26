@@ -1,25 +1,39 @@
-export interface Article {
-  id?: string;
-  title: string;
-  content: string;
-  slug: string;
-  category: string;
-  status: 'draft' | 'scheduled' | 'published';
-  scheduledDate?: string;
-  seoScore?: number;
-  mainKeyword: string;
-  metaDescription?: string;
-  tags?: string[];
-  internalLinks?: string[];
-  createdAt: string;
-  updatedAt: string;
-}
+export type ArticleStatus = 'draft' | 'pending' | 'published' | 'error' | 'scheduled';
 
 export interface Category {
-  id?: string;
+  id: string;
   name: string;
   slug: string;
   description?: string;
+  companyId: string;
+}
+
+export interface Backlink {
+  id: string;
+  url: string;
+  targetUrl: string;
+  targetDomain?: string;
+  anchor: string;
+  anchorText?: string;
+  anchorType?: string;
+  status: 'active' | 'broken' | 'pending';
+  lastChecked?: any;
+  tier?: string;
+  companyId: string;
+}
+
+export interface BacklinkTarget {
+  id: string;
+  url: string;
+  domain?: string;
+  type?: string;
+  da?: number;
+  status?: string;
+  tier?: string;
+  outreachAngle?: string;
+  idealAnchors: string[];
+  currentCount: number;
+  companyId: string;
 }
 
 export interface SEOScore {
@@ -35,26 +49,42 @@ export interface SEOScore {
   };
 }
 
-export interface BacklinkTarget {
-  id?: string;
-  domain: string;
-  da: number;
-  type: 'blog' | 'media' | 'directory' | 'forum' | 'business' | 'tech';
-  tier: 'tier1' | 'tier2' | 'tier3';
-  contactEmail?: string;
-  status: 'pending' | 'contacted' | 'negotiating' | 'signed' | 'rejected' | 'seeded';
-  outreachAngle?: string;
-  category?: 'africa_media' | 'local_iv' | 'business' | 'international' | 'seo_marketing';
+export interface Article {
+  id: string;
+  title: string;
+  slug: string;
+  mainKeyword: string;
+  keywordVariants?: string[]; // 1. Query Coverage Domination
+  intent?: 'informational' | 'comparative' | 'transactional' | 'decisional' | 'commercial'; // 2. Intent Stacking
+  linkPriority?: 1 | 2 | 3; // 3. Link Weighting (1 = Pillar/High, 2 = Support/Medium, 3 = Long-tail/Low)
+  entities?: string[]; // 5. Entity SEO
+  nextRefreshAt?: any; // 4. Freshness Engine
+  lastRefreshedAt?: any; // 4. Freshness Engine
+  content: string;
+  metaTitle: string;
+  metaDescription: string;
+  internalLinks: string[];
+  status: ArticleStatus;
+  cluster: string;
+  type: 'pillar' | 'support';
+  parentSlug?: string;
+  depth?: number;
   priority?: number;
+  seoScore: number;
+  featuredImage?: string;
+  category?: string;
+  scheduledDate?: any;
+  authorId: string;
+  companyId: string;
+  createdAt: any;
+  updatedAt: any;
 }
 
-export interface Backlink {
-  id?: string;
-  url: string;
-  targetDomain: string;
-  anchorText: string;
-  anchorType: 'brand' | 'keyword' | 'generic' | 'url';
-  status: 'active' | 'lost' | 'pending';
-  tier: 'tier1' | 'tier2' | 'tier3';
-  placedAt?: any;
+export interface SEOScoreDetails {
+  length: boolean;
+  density: boolean;
+  headings: boolean;
+  meta: boolean;
+  images: boolean;
+  internalLinks: boolean;
 }

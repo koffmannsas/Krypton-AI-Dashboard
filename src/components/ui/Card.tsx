@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { cn } from '../../lib/utils';
 
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -10,6 +10,7 @@ interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export default function Card({ children, className, ...props }: CardProps) {
+  const { onDrag, onDragEnd, onDragStart, onAnimationStart, ...safeProps } = props as any;
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -18,7 +19,7 @@ export default function Card({ children, className, ...props }: CardProps) {
         "bg-surface border border-border rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300",
         className
       )}
-      {...props}
+      {...safeProps}
     >
       {children}
     </motion.div>

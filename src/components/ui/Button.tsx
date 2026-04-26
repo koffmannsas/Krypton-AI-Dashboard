@@ -1,6 +1,6 @@
 import React from 'react';
 import { cn } from '../../lib/utils';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'outline' | 'ghost';
@@ -17,6 +17,8 @@ export default function Button({
   size = 'md',
   ...props
 }: ButtonProps) {
+  // Omit motion-conflicting props
+  const { onDrag, onDragEnd, onDragStart, onAnimationStart, ...safeProps } = props as any;
   const variants = {
     primary: 'bg-primary text-white hover:bg-primary/90 shadow-sm shadow-primary/20',
     outline: 'border border-border text-ink hover:bg-surface transition-colors',
@@ -39,7 +41,7 @@ export default function Button({
         sizes[size],
         className
       )}
-      {...props}
+      {...safeProps}
     />
   );
 }

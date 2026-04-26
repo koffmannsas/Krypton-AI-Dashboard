@@ -11,6 +11,7 @@ export default function KeywordManager() {
   const [keywords, setKeywords] = useState<Keyword[]>([]);
   const [newKeyword, setNewKeyword] = useState('');
   const [cluster, setCluster] = useState('');
+  const [intent, setIntent] = useState<'informational' | 'comparative' | 'transactional' | 'decisional' | 'commercial'>('informational');
   const [isAdding, setIsAdding] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -28,7 +29,7 @@ export default function KeywordManager() {
       await addKeywords(companyId, [{
         term: newKeyword,
         cluster,
-        intent: 'traffic',
+        intent,
         priority: 1,
         status: 'pending'
       }]);
@@ -54,7 +55,7 @@ export default function KeywordManager() {
             <Target size={20} />
             <h3 className="font-display font-bold uppercase tracking-tight">Injection de Mots-Clés</h3>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">
               <label className="text-[10px] font-bold uppercase text-muted">Expression Cible</label>
               <input 
@@ -63,6 +64,20 @@ export default function KeywordManager() {
                 placeholder="Ex: agent ia immobilier"
                 className="w-full p-3 bg-bg border border-border rounded-xl focus:outline-none focus:border-primary transition-all text-sm font-medium"
               />
+            </div>
+            <div className="space-y-2">
+              <label className="text-[10px] font-bold uppercase text-muted">Intent (Intent Stacking)</label>
+              <select 
+                value={intent}
+                onChange={(e) => setIntent(e.target.value as any)}
+                className="w-full p-3 bg-bg border border-border rounded-xl focus:outline-none focus:border-primary transition-all text-sm font-medium"
+              >
+                <option value="informational">Informationnel</option>
+                <option value="comparative">Comparatif</option>
+                <option value="transactional">Transactionnel</option>
+                <option value="decisional">Décisionnel</option>
+                <option value="commercial">Commercial</option>
+              </select>
             </div>
             <div className="space-y-2">
               <label className="text-[10px] font-bold uppercase text-muted">Cluster Sémantique</label>
@@ -120,6 +135,7 @@ export default function KeywordManager() {
             <thead className="bg-surface-secondary/50 border-b border-border font-mono text-[10px] uppercase text-muted">
               <tr>
                 <th className="px-6 py-4 font-bold">Expression</th>
+                <th className="px-6 py-4 font-bold">Intent</th>
                 <th className="px-6 py-4 font-bold">Cluster</th>
                 <th className="px-6 py-4 font-bold">Statut</th>
                 <th className="px-6 py-4 font-bold">Priorité</th>
@@ -144,6 +160,11 @@ export default function KeywordManager() {
                   <tr key={kw.id} className="group hover:bg-surface-secondary transition-colors">
                     <td className="px-6 py-4">
                       <div className="font-medium text-sm text-ink">{kw.term}</div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="px-2 py-1 bg-accent/5 text-accent border border-accent/20 rounded text-[9px] font-bold uppercase">
+                        {kw.intent}
+                      </span>
                     </td>
                     <td className="px-6 py-4">
                       <span className="px-2 py-1 bg-surface border border-border rounded text-[10px] font-bold uppercase opacity-60">

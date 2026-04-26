@@ -8,14 +8,18 @@
   
   --color-bg: var(--bg);
   --color-surface: var(--surface);
+  --color-surface-secondary: var(--surface-secondary);
   --color-border: var(--border);
   --color-primary: var(--primary);
   --color-muted: var(--muted);
+  --color-ink: var(--ink);
+  --color-accent: var(--accent);
 }
 
 :root {
   --bg: #FFFFFF;
   --surface: #F9F9FB;
+  --surface-secondary: #F3F4F6;
   --border: #E5E7EB;
   --primary: #3B82F6;
   --muted: #6B7280;
@@ -26,6 +30,7 @@
 .dark {
   --bg: #0A0A0A;
   --surface: #111111;
+  --surface-secondary: #171717;
   --border: #1F1F1F;
   --primary: #3B82F6;
   --muted: #9CA3AF;

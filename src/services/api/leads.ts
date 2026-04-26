@@ -21,6 +21,9 @@ export const subscribeLeads = (companyId: string, callback: (leads: Lead[]) => v
   );
   return onSnapshot(q, (snapshot) => {
     callback(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Lead)));
+  }, (error) => {
+    console.error("Firebase error in subscribeLeads:", error);
+    callback([]);
   });
 };
 

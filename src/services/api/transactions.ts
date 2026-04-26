@@ -23,6 +23,9 @@ export const subscribeTransactions = (
     }));
 
     callback(transactions);
+  }, (error) => {
+    console.error("Firebase error in subscribeTransactions:", error);
+    callback([]);
   });
 };
 

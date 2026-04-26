@@ -34,7 +34,7 @@ export default function SEO() {
 
   const handleSaveArticle = async (updates: Partial<Article>) => {
     if (!companyId || !editingArticle?.id) return;
-    await updateArticle(companyId, editingArticle.id, updates);
+    await updateArticle(editingArticle.id, updates);
     setEditingArticle(null);
   };
 
@@ -90,6 +90,37 @@ export default function SEO() {
         ))}
       </div>
 
+      {/* Active Engine Monitor */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Card className="p-6 space-y-4">
+           <h3 className="text-sm font-bold flex items-center gap-2">
+             <Sparkles size={16} className="text-primary animate-pulse" /> IA Generation Engine
+           </h3>
+           <div className="flex items-center justify-between p-3 bg-surface-secondary/50 rounded-xl border border-border">
+             <div className="flex flex-col">
+               <span className="text-[10px] font-black uppercase text-muted">Status</span>
+               <span className="text-xs font-bold text-green-500">OPTIMIZING</span>
+             </div>
+             <div className="text-right">
+               <span className="text-[10px] font-black uppercase text-muted">Efficiency</span>
+               <span className="text-xs font-bold">98.2%</span>
+             </div>
+           </div>
+        </Card>
+        <Card className="p-6 space-y-4">
+           <h3 className="text-sm font-bold flex items-center gap-2">
+             <Target size={16} className="text-accent" /> Semantic Discovery Engine
+           </h3>
+           <div className="flex items-center justify-between p-3 bg-surface-secondary/50 rounded-xl border border-border">
+             <div className="flex flex-col">
+               <span className="text-[10px] font-black uppercase text-muted">Gaps Found</span>
+               <span className="text-xs font-bold text-accent">14 New Opportunities</span>
+             </div>
+             <button className="text-[10px] font-black uppercase text-primary hover:underline">Explore Cocoon</button>
+           </div>
+        </Card>
+      </div>
+
       {/* Main Content Area */}
       <Card className="p-0 overflow-hidden min-h-[500px]">
         {activeTab === 'articles' && (
@@ -117,7 +148,6 @@ export default function SEO() {
       {editingArticle && (
         <ArticleEditor 
           article={editingArticle}
-          onSave={handleSaveArticle}
           onClose={() => setEditingArticle(null)}
         />
       )}

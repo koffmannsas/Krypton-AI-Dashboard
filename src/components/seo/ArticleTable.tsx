@@ -1,6 +1,6 @@
 import React from 'react';
 import { Article } from '../../types/seo';
-import { FileText, ExternalLink, Trash2, Edit, CheckCircle, Clock, File } from 'lucide-react';
+import { FileText, ExternalLink, Trash2, Edit, CheckCircle, Clock, Sparkles } from 'lucide-react';
 import { cn } from '../../lib/utils';
 
 interface ArticleTableProps {
@@ -11,8 +11,9 @@ interface ArticleTableProps {
 export default function ArticleTable({ articles, onEdit }: ArticleTableProps) {
   const statusTags = {
      published: { icon: <CheckCircle size={10} />, class: 'bg-green-500/10 text-green-500 border-green-500/20' },
-     draft: { icon: <File size={10} />, class: 'bg-muted/10 text-muted border-border' },
-     scheduled: { icon: <Clock size={10} />, class: 'bg-primary/10 text-primary border-primary/20' },
+     draft: { icon: <FileText size={10} />, class: 'bg-muted/10 text-muted border-border' },
+     pending: { icon: <Sparkles size={10} />, class: 'bg-accent/10 text-accent border-accent/20' },
+     error: { icon: <CheckCircle size={10} />, class: 'bg-red-500/10 text-red-500 border-red-500/20' },
   };
 
   return (
@@ -24,14 +25,13 @@ export default function ArticleTable({ articles, onEdit }: ArticleTableProps) {
             <th className="p-4 text-[10px] uppercase font-bold text-muted tracking-widest">Main Keyword</th>
             <th className="p-4 text-[10px] uppercase font-bold text-muted tracking-widest">SEO Health</th>
             <th className="p-4 text-[10px] uppercase font-bold text-muted tracking-widest">Status</th>
-            <th className="p-4 text-[10px] uppercase font-bold text-muted tracking-widest">Pipeline Date</th>
             <th className="p-4 text-[10px] uppercase font-bold text-muted tracking-widest text-right pr-8">Actions</th>
           </tr>
         </thead>
         <tbody className="text-sm">
           {articles.length === 0 ? (
             <tr>
-              <td colSpan={6} className="p-20 text-center text-muted italic">
+              <td colSpan={5} className="p-20 text-center text-muted italic">
                 No article entities found in this cluster.
               </td>
             </tr>
@@ -76,9 +76,6 @@ export default function ArticleTable({ articles, onEdit }: ArticleTableProps) {
                     {statusTags[article.status as keyof typeof statusTags]?.icon || statusTags.draft.icon}
                     {article.status}
                   </div>
-                </td>
-                <td className="p-4 text-xs font-mono text-muted">
-                   {article.scheduledDate ? new Date(article.scheduledDate).toLocaleDateString() : '-'}
                 </td>
                 <td className="p-4 text-right pr-8">
                   <div className="flex justify-end gap-1">

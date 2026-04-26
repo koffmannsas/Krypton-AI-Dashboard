@@ -25,6 +25,9 @@ export const subscribeBacklinkTargets = (companyId: string, callback: (targets: 
   );
   return onSnapshot(q, (snapshot) => {
     callback(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as BacklinkTarget)));
+  }, (error) => {
+    console.error("Firebase error in subscribeBacklinkTargets:", error);
+    callback([]);
   });
 };
 
@@ -35,6 +38,9 @@ export const subscribeBacklinks = (companyId: string, callback: (backlinks: Back
   );
   return onSnapshot(q, (snapshot) => {
     callback(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Backlink)));
+  }, (error) => {
+    console.error("Firebase error in subscribeBacklinks:", error);
+    callback([]);
   });
 };
 

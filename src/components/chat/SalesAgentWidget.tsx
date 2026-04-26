@@ -25,7 +25,7 @@ export default function SalesAgentWidget() {
   const [leadId, setLeadId] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   
-  const companyId = "krypton-demo"; // Simulation identifier for lead tracking
+  const companyId = "default-company"; // Simulation identifier for lead tracking
 
   useEffect(() => {
     if (location.pathname !== '/') return;

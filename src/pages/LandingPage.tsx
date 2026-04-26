@@ -1,18 +1,43 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { subscribeWebsiteSettings, WebsiteSettings } from '../services/api/settings';
-import { ArrowRight, Bot, Zap, Globe, Sparkles, CheckCircle2 } from 'lucide-react';
+import { subscribeWebsiteSettings, getWebsiteSettings, DEFAULT_CONFIG, WebsiteSettings } from '../services/api/settings';
+import Header from '../components/layout/Header';
+import Footer from '../components/layout/Footer';
+import { ArrowRight, Bot, Zap, Globe, Sparkles, CheckCircle2, ChevronRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import SalesAgentWidget from '../components/chat/SalesAgentWidget';
 
 // Simulation company ID for the demo/project
-const companyId = "krypton-demo";
+const companyId = "default-company";
 
 export default function LandingPage() {
   const [settings, setSettings] = useState<WebsiteSettings | null>(null);
 
   useEffect(() => {
-    const unsub = subscribeWebsiteSettings(companyId, setSettings);
-    return () => unsub();
+    let unsub: (() => void) | null = null;
+
+    const loadSettings = async () => {
+      // Safe Startup pattern using Promise.race (Anti-Bug)
+      const data = await Promise.race([
+        getWebsiteSettings(companyId),
+        new Promise<null>(resolve => setTimeout(() => resolve(null), 1500))
+      ]);
+      
+      if (!data) {
+        setSettings(DEFAULT_CONFIG);
+      } else {
+        setSettings(data);
+      }
+
+      // Then subscribe for fresh values in background
+      unsub = subscribeWebsiteSettings(companyId, setSettings);
+    };
+
+    loadSettings();
+
+    return () => {
+      if (unsub) unsub();
+    };
   }, []);
 
   if (!settings) return (
@@ -23,23 +48,7 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-bg text-ink font-sans selection:bg-primary/20">
-      
-      {/* Navbar */}
-      <nav className="fixed w-full top-0 border-b border-border bg-bg/80 backdrop-blur-md z-50">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Bot className="text-primary" size={24} />
-            <span className="font-display font-bold text-lg tracking-tight">Krypton AI</span>
-          </div>
-          <div className="flex items-center gap-6 text-sm font-medium">
-            <a href="#features" className="hover:text-primary transition-colors">Fonctionnalités</a>
-            <a href="#pricing" className="hover:text-primary transition-colors">Tarifs</a>
-            <a href="/admin" className="px-4 py-2 bg-surface border border-border rounded-lg hover:border-primary transition-all">
-              Dashboard
-            </a>
-          </div>
-        </div>
-      </nav>
+      <Header />
 
       {/* Hero Section */}
       <section className="pt-40 pb-20 px-6">
@@ -126,7 +135,39 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Le Widget est injecté ici via App.tsx ou localement (vu qu'il est déjà dans l'Admin, on le laisse s'afficher via le router principal) */}
+      {/* Blog Showcase Section */}
+      <section className="py-24 px-6 border-t border-border">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-4">
+              <div>
+                <h2 className="text-4xl font-display font-bold mb-4 tracking-tight">Dernières Analyses IA</h2>
+                <p className="text-muted text-lg">Comment nos moteurs SEO transforment le trafic organique.</p>
+              </div>
+              <Link to="/blog" className="flex items-center gap-2 font-bold text-primary hover:underline">
+                Voir tout le mag <ChevronRight size={18} />
+              </Link>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
+               {[1, 2, 3].map(i => (
+                 <div key={i} className="group bg-surface border border-border rounded-3xl overflow-hidden hover:border-primary/50 transition-all shadow-sm">
+                   <div className="aspect-[16/10] bg-surface-secondary overflow-hidden">
+                      <img src={`https://picsum.photos/seed/seo${i}/800/500`} alt="Post" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                   </div>
+                   <div className="p-8 space-y-4">
+                      <div className="text-[10px] font-black uppercase tracking-widest text-primary">Topic Cluster: IA & Business</div>
+                      <h3 className="text-xl font-bold leading-tight group-hover:text-primary transition-colors">Stratégie SEO 2024 : Dominer sa niche avec le cocon sémantique Krypton.</h3>
+                      <Link to="/blog" className="flex items-center gap-2 text-sm font-bold text-ink hover:text-primary transition-all">
+                        Lire l'étude de cas <ArrowRight size={14} />
+                      </Link>
+                   </div>
+                 </div>
+               ))}
+            </div>
+          </div>
+        </section>
+
+      <Footer />
     </div>
   );
 }

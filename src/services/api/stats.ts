@@ -4,6 +4,7 @@ import {
   onSnapshot,
   query,
 } from "firebase/firestore";
+import { handleFirestoreError, OperationType } from '../../lib/firestoreUtils';
 
 export const subscribeStats = (
   companyId: string,
@@ -45,7 +46,7 @@ export const subscribeStats = (
       });
     },
     (error) => {
-      console.error("❌ Error fetching stats:", error);
+      handleFirestoreError(error, OperationType.LIST, `companies/${companyId}/transactions`);
     }
   );
 };

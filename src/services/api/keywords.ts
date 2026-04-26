@@ -20,7 +20,7 @@ export interface Keyword {
   id: string;
   term: string;
   cluster: string;
-  intent: 'traffic' | 'conversion';
+  intent: 'traffic' | 'conversion' | 'informational' | 'comparative' | 'transactional' | 'decisional' | 'commercial';
   status: 'pending' | 'processing' | 'completed';
   priority: number;
   secondaryKeywords?: string[];
@@ -35,6 +35,9 @@ export const subscribeKeywords = (companyId: string, callback: (keywords: Keywor
   );
   return onSnapshot(q, (snapshot) => {
     callback(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Keyword)));
+  }, (error) => {
+    console.error("Firebase error in subscribeKeywords:", error);
+    callback([]);
   });
 };
 

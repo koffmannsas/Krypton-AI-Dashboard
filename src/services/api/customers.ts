@@ -10,6 +10,7 @@ import {
   orderBy,
   serverTimestamp,
 } from "firebase/firestore";
+import { handleFirestoreError, OperationType } from '../../lib/firestoreUtils';
 
 // 🧠 TYPES (PRO)
 export interface Customer {
@@ -45,7 +46,7 @@ export const subscribeCustomers = (
       callback(customers);
     },
     (error) => {
-      console.error("❌ Error fetching customers:", error);
+      handleFirestoreError(error, OperationType.LIST, `companies/${companyId}/customers`);
     }
   );
 };
@@ -129,7 +130,7 @@ export const subscribeCustomersCount = (
         callback(snapshot.size); // 🔥 nombre de clients
       },
       (error) => {
-        console.error("❌ Error fetching customers count:", error);
+        handleFirestoreError(error, OperationType.LIST, `companies/${companyId}/customers`);
       }
     );
   } catch (error) {
